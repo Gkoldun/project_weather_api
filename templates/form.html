@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Оценка погодных условий маршрута</title>
+</head>
+<body>
+    <h2>Оценка погодных условий маршрута</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div>{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('evaluate') }}">
+        <label for="start_city">Начальная точка маршрута (город):</label>
+        <input type="text" id="start_city" name="start_city" required>
+
+        <label for="end_city">Конечная точка маршрута (город):</label>
+        <input type="text" id="end_city" name="end_city" required>
+
+        <input type="submit" value="Оценить погоду">
+    </form>
+</body>
+</html>
