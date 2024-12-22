@@ -1,31 +1,141 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Результат оценки погоды</title>
+    <meta charset="utf-8">
+    <title>Погода для городов</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        footer a {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        footer a:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        caption {
+            caption-side: top;
+            padding: 15px;
+            font-size: 1.5em;
+            background-color: #3498db;
+            color: white;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #dfe6e9;
+            transition: background-color 0.3s;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+
+            caption {
+                font-size: 1.2em;
+            }
+
+            footer a {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Результат оценки погоды</h2>
-    <div class="weather-data">
-        <h3>Начальная точка: {{ start_city }}</h3>
-        <p>Температура: {{ start_weather['температура в градусах цельсия'] }}°C</p>
-        <p>Влажность: {{ start_weather['влажность (процентное содержание)'] }}%</p>
-        <p>Скорость ветра: {{ start_weather['скорость ветра'] }} км/ч</p>
-        <p>Вероятность дождя: {{ start_weather['вероятность дождя'] }}%</p>
-        <p>Оценка погоды: {{ start_weather['погодные условия'] }}%</p>
 
-        <h3>Конечная точка: {{ end_city }}</h3>
-        <p>Температура: {{ end_weather['температура в градусах цельсия'] }}°C</p>
-        <p>Влажность: {{ end_weather['влажность (процентное содержание)'] }}%</p>
-        <p>Скорость ветра: {{ end_weather['скорость ветра'] }} км/ч</p>
-        <p>Вероятность дождя: {{ end_weather['вероятность дождя'] }}%</p>
-        <p>Оценка погоды: {{ end_weather['погодные условия'] }}</p>
-    </div>
-    <div>
-        <p>{{ result_message }}</p>
-    </div>
-    <div>
-        <a href="{{ url_for('home') }}">Вернуться назад</a>
-    </div>
+    {% for city, weath in city_weather.items() %}
+    <h1>Погода для города {{ city }}</h1>
+    <table>
+        <caption>Прогноз погоды</caption>
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Температура (°C)</th>
+                <th>Влажность (%)</th>
+                <th>Скорость ветра (км/ч)</th>
+                <th>Вероятность осадков (%)</th>
+                <th>Анализ погоды</th>
+                <th>Уровень погоды</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in weath %}
+            <tr>
+                <td>{{ day.date }}</td>
+                <td>{{ day.temp }}</td>
+                <td>{{ day.humidity }}</td>
+                <td>{{ day.wind_speed }}</td>
+                <td>{{ day.precipitation_probability }}</td>
+                <td>{{ day.weather }}</td>
+                <td>{{ day.level }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+
+    <footer>
+        <a href="/plot">Отображение на графиках</a>
+        <a href="/map">Отображение на карте</a>
+    </footer>
+
 </body>
 </html>
